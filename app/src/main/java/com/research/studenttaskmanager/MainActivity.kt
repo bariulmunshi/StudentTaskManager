@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import android.content.Intent
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,11 +44,8 @@ class MainActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                Toast.makeText(
-                    this,
-                    "Welcome $userName",
-                    Toast.LENGTH_SHORT
-                ).show()
+                val intent = Intent(this, DashboardActivity::class.java)
+                startActivity(intent)
             }
         }
     }
