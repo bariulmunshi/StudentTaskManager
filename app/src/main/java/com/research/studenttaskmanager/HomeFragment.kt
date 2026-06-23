@@ -1,5 +1,6 @@
 package com.research.studenttaskmanager
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 class HomeFragment : Fragment() {
 
     private lateinit var taskAdapter: TaskAdapter
-    private val taskList = mutableListOf(
-        Task("Study Kotlin"),
-        Task("Learn XML"),
-        Task("Practice Intent")
-    )
+    private val taskList = mutableListOf<Task>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +29,8 @@ class HomeFragment : Fragment() {
         val btnAddTask = view.findViewById<Button>(R.id.btnAddTask)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
 
+        loadTasks()
+
         taskAdapter = TaskAdapter(taskList)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -44,6 +43,7 @@ class HomeFragment : Fragment() {
             if (newTask.isNotEmpty()) {
                 taskList.add(Task(newTask))
                 taskAdapter.notifyDataSetChanged()
+                saveTasks()
                 etTask.text.clear()
             } else {
                 Toast.makeText(
@@ -55,5 +55,32 @@ class HomeFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun saveTasks() {
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("TaskPrefs", Context.MODE_PRIVATE)
+
+        val editor = sharedPreferences.edit()
+
+        val taskTitles = taskList.joinToString(",") { it.title }
+
+        editor.putString("TASK_LIST", taskTitles)
+        editor.apply()
+    }
+
+    private fun loadTasks() {
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("TaskPrefs", Context.MODE_PRIVATE)
+
+        val savedTasks = sharedPreferences.getString("TASK_LIST", "")
+
+        if (!savedTasks.isNullOrEmpty()) {
+            val taskArray = savedTasks.split(",")
+
+            for (task in taskArray) {
+                taskList.add(Task(task))
+            }
+        }
     }
 }
