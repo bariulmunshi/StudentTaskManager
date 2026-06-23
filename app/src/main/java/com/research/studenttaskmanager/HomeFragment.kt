@@ -1,6 +1,5 @@
 package com.research.studenttaskmanager
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +10,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import kotlin.concurrent.thread
 
 class HomeFragment : Fragment() {
 
     private lateinit var taskAdapter: TaskAdapter
     private val taskList = mutableListOf<Task>()
+    private lateinit var database: AppDatabase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,24 +31,39 @@ class HomeFragment : Fragment() {
         val btnAddTask = view.findViewById<Button>(R.id.btnAddTask)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
 
-        loadTasks()
+        database = Room.databaseBuilder(
+            requireContext(),
+            AppDatabase::class.java,
+            "task_database"
+        ).build()
 
         taskAdapter = TaskAdapter(taskList) {
-            saveTasks()
+            // delete sync later
         }
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = taskAdapter
+
+        loadTasks()
 
         btnAddTask.setOnClickListener {
 
             val newTask = etTask.text.toString().trim()
 
             if (newTask.isNotEmpty()) {
-                taskList.add(Task(newTask))
-                taskAdapter.notifyDataSetChanged()
-                saveTasks()
-                etTask.text.clear()
+
+                val task = TaskEntity(title = newTask)
+
+                thread {
+                    database.taskDao().insertTask(task)
+
+                    activity?.runOnUiThread {
+                        taskList.add(Task(newTask))
+                        taskAdapter.notifyDataSetChanged()
+                        etTask.text.clear()
+                    }
+                }
+
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -59,29 +76,18 @@ class HomeFragment : Fragment() {
         return view
     }
 
-    private fun saveTasks() {
-        val sharedPreferences =
-            requireActivity().getSharedPreferences("TaskPrefs", Context.MODE_PRIVATE)
-
-        val editor = sharedPreferences.edit()
-
-        val taskTitles = taskList.joinToString(",") { it.title }
-
-        editor.putString("TASK_LIST", taskTitles)
-        editor.apply()
-    }
-
     private fun loadTasks() {
-        val sharedPreferences =
-            requireActivity().getSharedPreferences("TaskPrefs", Context.MODE_PRIVATE)
+        thread {
+            val savedTasks = database.taskDao().getAllTasks()
 
-        val savedTasks = sharedPreferences.getString("TASK_LIST", "")
+            activity?.runOnUiThread {
+                taskList.clear()
 
-        if (!savedTasks.isNullOrEmpty()) {
-            val taskArray = savedTasks.split(",")
+                for (task in savedTasks) {
+                    taskList.add(Task(task.title))
+                }
 
-            for (task in taskArray) {
-                taskList.add(Task(task))
+                taskAdapter.notifyDataSetChanged()
             }
         }
     }
