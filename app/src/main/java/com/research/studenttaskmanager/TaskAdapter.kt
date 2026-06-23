@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class TaskAdapter(
     private val taskList: MutableList<Task>,
-    private val onTaskDeleted: () -> Unit
+    private val onTaskDeleted: (Task) -> Unit
 ) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -26,9 +26,10 @@ class TaskAdapter(
         holder.tvTask.text = taskList[position].title
 
         holder.itemView.setOnClickListener {
+            val deletedTask = taskList[position]
             taskList.removeAt(position)
             notifyDataSetChanged()
-            onTaskDeleted()
+            onTaskDeleted(deletedTask)
         }
     }
 

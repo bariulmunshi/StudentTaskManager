@@ -37,8 +37,13 @@ class HomeFragment : Fragment() {
             "task_database"
         ).build()
 
-        taskAdapter = TaskAdapter(taskList) {
-            // delete sync later
+        taskAdapter = TaskAdapter(taskList) { deletedTask ->
+
+            thread {
+                database.taskDao().deleteTask(
+                    TaskEntity(title = deletedTask.title)
+                )
+            }
         }
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
