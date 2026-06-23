@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             } else {
                 val intent = Intent(this, DashboardActivity::class.java)
+                intent.putExtra("USER_NAME", userName)
                 startActivity(intent)
             }
         }
