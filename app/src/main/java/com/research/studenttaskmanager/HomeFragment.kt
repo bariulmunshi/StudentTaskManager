@@ -31,7 +31,9 @@ class HomeFragment : Fragment() {
 
         loadTasks()
 
-        taskAdapter = TaskAdapter(taskList)
+        taskAdapter = TaskAdapter(taskList) {
+            saveTasks()
+        }
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = taskAdapter
