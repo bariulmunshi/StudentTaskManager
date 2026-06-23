@@ -2,6 +2,7 @@ package com.research.studenttaskmanager
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -27,14 +28,26 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        val etName = findViewById<EditText>(R.id.etName)
         val btnStart = findViewById<Button>(R.id.btnStart)
 
         btnStart.setOnClickListener {
-            Toast.makeText(
-                this,
-                "Welcome to Android Development!",
-                Toast.LENGTH_SHORT
-            ).show()
+
+            val userName = etName.text.toString().trim()
+
+            if (userName.isEmpty()) {
+                Toast.makeText(
+                    this,
+                    "Please enter your name",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Welcome $userName",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 }
