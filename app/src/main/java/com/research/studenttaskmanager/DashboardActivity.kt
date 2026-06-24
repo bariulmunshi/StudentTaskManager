@@ -39,7 +39,18 @@ class DashboardActivity : AppCompatActivity() {
                         .commit()
                     true
                 }
-
+                R.id.nav_api -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, ApiFragment())
+                        .commit()
+                    true
+                }
+                R.id.nav_post -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, PostFragment())
+                        .commit()
+                    true
+                }
                 else -> false
             }
         }

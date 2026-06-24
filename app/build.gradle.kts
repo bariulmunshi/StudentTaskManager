@@ -1,11 +1,12 @@
 plugins {
-    id("kotlin-kapt")
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.research.studenttaskmanager"
-    compileSdk = 37
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.research.studenttaskmanager"
@@ -24,25 +25,37 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 }
 
+kotlin {
+    jvmToolchain(21)
+}
+
 dependencies {
+
+    // API
+    implementation("com.android.volley:volley:1.2.1")
+
+    // Room Database
     implementation("androidx.room:room-runtime:2.7.2")
-    kapt("androidx.room:room-compiler:2.7.2")
+    ksp("androidx.room:room-compiler:2.7.2")
     implementation("androidx.room:room-ktx:2.7.2")
-    implementation("com.google.android.material:material:1.12.0")
+
+    // UI
     implementation("androidx.recyclerview:recyclerview:1.4.0")
+    implementation("com.google.android.material:material:1.12.0")
+
+    // AndroidX
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.material)
 
+    // Testing
     testImplementation(libs.junit)
-
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
 }
