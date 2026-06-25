@@ -9,10 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.content.Intent
+import com.google.firebase.auth.FirebaseAuth
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val auth = FirebaseAuth.getInstance()
+        Log.d("FirebaseTest", "Firebase Connected Successfully")
 
         super.onCreate(savedInstanceState)
 

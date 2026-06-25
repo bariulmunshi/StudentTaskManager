@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -35,7 +36,7 @@ kotlin {
 }
 
 dependencies {
-
+    implementation("com.google.firebase:firebase-auth:24.0.1")
     // API
     implementation("com.android.volley:volley:1.2.1")
 
