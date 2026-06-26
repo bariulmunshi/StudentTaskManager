@@ -1,5 +1,7 @@
 package com.research.studenttaskmanager
 
 data class Task(
-    val title: String
+    val id: String = "",
+    val title: String = "",
+    var isCompleted: Boolean = false
 )

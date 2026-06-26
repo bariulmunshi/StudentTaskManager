@@ -36,6 +36,7 @@ kotlin {
 }
 
 dependencies {
+    implementation("com.google.firebase:firebase-database:21.0.0")
     implementation("com.google.firebase:firebase-auth:24.0.1")
     // API
     implementation("com.android.volley:volley:1.2.1")
